@@ -1,0 +1,15 @@
+{
+  "name": "futonland-stock",
+  "version": "1.0.0",
+  "description": "Web app to show current Futonland stock",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "futonland-stock"
+  },
+  "author": "",
+  "license": "ISC"
+}
