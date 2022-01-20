@@ -1,19 +1,43 @@
-$("#generate").click(function(){
-	var lorem = $("#lorem");
-	lorem.html("");
-	var quantity = $("#quantity")[0].valueAsNumber;
-	var data = ["Lorem ipsum", "quia dolor sit", "amet", "consectetur"];
-	for(var i = 0; i < quantity; i++){
-		lorem.append("<p>"+data[i]+"</p>");
-	}
+const update = document.querySelector('#update-button')
+
+update.addEventListener('click', () => {
+	fetch('/quotes', {
+		method: 'put',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			name: 'Darth Vadar',
+			quote: 'I find your lack of faith disturbing.'
+		})
+	})
+  .then(res => {
+    if (res.ok) return res.json()
+  })
+  .then(response => {
+    window.location.reload(true)
+  })
+	.catch(error => console.error(error))
 })
 
-$("#copy").click(function() {
-	var range = document.createRange();
-	range.selectNode($("#lorem")[0]);
-	window.getSelection().removeAllRanges();
-	window.getSelection().addRange(range);
-	document.execCommand("copy");
-	window.getSelection().removeAllRanges();
-	}
-)
+const deleteButton = document.querySelector('#delete-button')
+const messageDiv = document.querySelector('#message')
+
+deleteButton.addEventListener('click', _ => {
+  fetch('/quotes', {
+    method: 'delete',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: 'Darth Vadar'
+    })
+  })
+	.then(res => {
+		if (res.ok) return res.json()
+	})
+	.then(response => {
+		if (response === 'No quote to delete') {
+			messageDiv.textContent = 'No Darth Vadar quote to delete'
+		} else {
+			window.location.reload(true)
+		}
+	})
+	.catch(error => console.error(error))
+})
