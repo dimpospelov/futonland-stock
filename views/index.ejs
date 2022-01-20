@@ -9,24 +9,41 @@
   </head>
 
   <body>
-    <h1>May Node and Express be with you.</h1>
+    <h1>Futonland Stock</h1>
 
-    <form action="/quotes" method="POST">
-      <input type="text" placeholder="name" name="name" />
-      <input type="text" placeholder="quote" name="quote" />
+    <form action="/products" method="POST">
+      <input type="text" placeholder="brand" name="brand" />
+      <input type="text" placeholder="product_type" name="product_type" />
       <button type="submit">Submit</button>
     </form>
 
-    <h2> Quotes </h2>
+    <h2> Products </h2>
 
-    <ul class="quotes">
-      <!-- Loop through quotes -->
-      <% for(var i = 0; i < quotes.length; i++) {%>
+    
+
+    <form action="/" method="GET">
+        <select name="brand" id="brand">
+            <option value="">All Brands</option>
+            <% for (const brand in brands) {%>
+                <option value="<%= brand %>" <% if (request['brand'] == brand) {%> selected <% } %>><%= brand %> (<%= brands[brand] %>)</option>
+            <% } %>
+        </select>
+        <select name="product_type" id="product_type">
+            <option value="">All Product Types</option>
+            <% for (const type in types) {%>
+                <option value="<%= type %>" <% if (request['product_type'] == type) {%> selected <% } %>><%= type %> (<%= types[type] %>)</option>
+            <% } %>
+        </select>
+        <button type="submit">Search</button>
+    </form>
+
+    <p>Result Count: <%= count %></p>
+
+    <ul class="products">
+      <% for (var i = 0; i < products.length; i++) {%>
         <li class="quote">
-          <!-- Output name from the iterated quote object -->
-          <span><%= quotes[i].name %></span>:
-          <!-- Output quote from the iterated quote object -->
-          <span><%= quotes[i].quote %></span>
+          <span><%= products[i].brand %></span>:
+          <span><%= products[i].product_type %></span>
         </li>
       <% } %>
     </ul>
