@@ -17,6 +17,10 @@
 					<form action="/" method="GET" id="search">
 						<div class="mb-3">
 
+							<div class="form mb-3">
+								<input type="text" class="form-control" name="keyword" id="keyword" placeholder="Search" <% if(request['keyword']) {%>value="<%= request['keyword'] %>"<%}%>>
+							</div>
+
 							<h4>Product Type</h4>
 							<% for (const type in types) {%>
 							<div class="form-check">
@@ -63,15 +67,17 @@
 				</div>
 				<div class="col-9">
 
-					<div class="row">
-						<div class="col">
-							Results found: <%= count %> <% if (count > 100) {%> (Showing first 100) <%}%>
-							<!-- <select class="form-select" name="change_page_select" id="change_page_select" form="search">
-								<option value="24">24 per page</option>
-								<option value="48">48 per page</option>
-								<option value="24">96 per page</option>
-								<option value="">View All</option>
-							</select> -->
+					<div class="row mb-4">
+						<div class="col" style="line-height: 38px;">
+							Results found: <%= count %> <% if (count > 100) {%> <span class="text-muted">(Showing first 100)</span> <%}%>
+						</div>
+						<div class="col-auto">
+							<select class="form-select" name="sort" id="sort" form="search" onchange="this.form.submit()">
+								<option value="">Order by...</option>
+								<option value="title" <% if (request['sort'] == 'title') {%> selected <% } %>>Product Name</option>
+								<option value="brand" <% if (request['sort'] == 'brand') {%> selected <% } %>>Manufacturer</option>
+								<option value="sale_price" <% if (request['sort'] == 'sale_price') {%> selected <% } %>>Price</option>
+							</select>
 						</div>
 					</div>
 
@@ -93,24 +99,36 @@
 									<div class="card-body">
 										<div class="row card-text small text-muted">
 											<div class="col">ID# <%= products[i].itemid %></div>
-											<div class="col-auto">$<%= products[i].sale_price %></div>
+											<div class="col-auto">$<%= products[i].sale_price.toFixed(2) %></div>
 										</div>
 									</div>
 									<div class="card-footer small text-muted">
 										<div class="row">
 											<div class="col">Greenpoint</div>
-											<div class="col-1"><%= products[i]['FLBKLYN-1'] ? products[i]['FLBKLYN-1'] : '-' %></div>
-											<div class="col-1"><%= products[i]['FLBKLYN-2'] ? products[i]['FLBKLYN-2'] : '-' %></div>
+											<div class="col-2">
+												<div class="count"><%= products[i]['FLBKLYN-1'] ? products[i]['FLBKLYN-1'] : '\u2022' %></div>
+											</div>
+											<div class="col-2">
+												<div class="count"><%= products[i]['FLBKLYN-2'] ? products[i]['FLBKLYN-2'] : '\u2022' %></div>
+											</div>
 										</div>
 										<div class="row">
 											<div class="col">Upper West Side</div>
-											<div class="col-1"><%= products[i]['FLNYC-1'] ? products[i]['FLNYC-1'] : '-' %></div>
-											<div class="col-1"><%= products[i]['FLNYC-2'] ? products[i]['FLNYC-2'] : '-' %></div>
+											<div class="col-2">
+												<div class="count"><%= products[i]['FLNYC-1'] ? products[i]['FLNYC-1'] : '\u2022' %></div>
+											</div>
+												<div class="col-2">
+													<div class="count"><%= products[i]['FLNYC-2'] ? products[i]['FLNYC-2'] : '\u2022' %></div>
+												</div>
 										</div>
 										<div class="row">
 											<div class="col">Newark</div>
-											<div class="col-1"><%= products[i]['FLNWRK-1'] ? products[i]['FLNWRK-1'] : '-' %></div>
-											<div class="col-1"><%= products[i]['FLNWRK-2'] ? products[i]['FLNWRK-2'] : '-' %></div>
+											<div class="col-2">
+												<div class="count"><%= products[i]['FLNWRK-1'] ? products[i]['FLNWRK-1'] : '\u2022' %></div>
+											</div>
+												<div class="col-2">
+													<div class="count"><%= products[i]['FLNWRK-2'] ? products[i]['FLNWRK-2'] : '\u2022' %></div>
+												</div>
 										</div>
 									</div>
 								</div>

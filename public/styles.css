@@ -5,8 +5,15 @@
 .square-image img {
 	max-width: 100%;
 	max-height: 100%;
-	
+
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.count {
+	white-space: nowrap;
+    margin-left: -100%;
+    margin-right: -100%;
+    text-align: center;
 }

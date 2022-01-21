@@ -22,14 +22,19 @@ MongoClient.connect(connectionString, (err, client) => {
     // console.log(req.query)
 
     // Removing empty values from the query
-    req.query = Object.fromEntries(Object.entries(req.query).filter(([_, v]) => v != ''));
+    // req.query = Object.fromEntries(Object.entries(req.query).filter(([_, v]) => v != ''));
+
+    let query = {}
+    if (req.query.product_type) query.product_type = req.query.product_type
+    if (req.query.brand) query.brand = req.query.brand
+    if (req.query.keyword) query.title = { $regex: req.query.keyword, $options: "i" }
 
     let brands = [],
       types = [],
       brandsCounted = {},
       typesCounted = {}
 
-    stockCollection.find(req.query).sort({ title: 1 }).toArray()
+    stockCollection.find(query).sort({ [req.query.sort || 'title']: 1 }).toArray()
       .then(results => {
 
         // List of brands and count
