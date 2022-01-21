@@ -17,3 +17,7 @@
     margin-right: -100%;
     text-align: center;
 }
+
+#price .rangepicker-selection {
+	background: red;
+}

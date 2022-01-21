@@ -17,9 +17,20 @@
 					<form action="/" method="GET" id="search">
 						<div class="mb-3">
 
-							<div class="form mb-3">
-								<input type="text" class="form-control" name="keyword" id="keyword" placeholder="Search" <% if(request['keyword']) {%>value="<%= request['keyword'] %>"<%}%>>
-							</div>
+							<input type="text" class="form-control" name="keyword" id="keyword" placeholder="Search" <% if(request['keyword']) {%>value="<%= request['keyword'] %>"<%}%>>
+							
+						</div>
+						<div class="mb-3">
+
+							<select class="form-select" name="location" id="location" onchange="this.form.submit()">
+								<option value="">All Locations</option>
+								<option value="FLBKLYN" <% if (request['location'] == "FLBKLYN") {%> selected <%}%> >Greenpoint</option>
+								<option value="FLNYC" <% if (request['location'] == "FLNYC") {%> selected <%}%> >Upper West Side</option>
+								<option value="FLNWRK" <% if (request['location'] == "FLNWRK") {%> selected <%}%> >Newark</option>
+							</select>
+
+						</div>
+						<div class="mb-3">
 
 							<h4>Product Type</h4>
 							<% for (const type in types) {%>
@@ -31,14 +42,6 @@
 								</label>
 							</div>
 							<% } %>
-
-							<!-- <label for="product_type" class="form-label">Product Type</label>
-							<select class="form-select" name="product_type" id="product_type">
-									<option value="">All Product Types</option>
-									<% for (const type in types) {%>
-											<option value="<%= type %>" <% if (request['product_type'] == type) {%> selected <% } %>><%= type %> (<%= types[type] %>)</option>
-									<% } %>
-							</select> -->
 
 						</div>
 						<div class="mb-3">
@@ -54,13 +57,18 @@
 							</div>
 							<% } %>
 
-							<!-- <label for="brand" class="form-label">Manufacturer</label>
-							<select class="form-select" name="brand" id="brand">
-									<option value="">All Brands</option>
-									<% for (const brand in brands) {%>
-											<option value="<%= brand %>" <% if (request['brand'] == brand) {%> selected <% } %>><%= brand %> (<%= brands[brand] %>)</option>
-									<% } %>
-							</select> -->
+						</div>
+						<div class="mb-3">
+
+							<h4>Price</h4>
+							<div class="row">
+								<div class="col">
+									<input type="range" class="form-range" min="0" max="10000" step="100" <% if(request['price']) {%>value="<%= request['price'] %>"<%} else {%>value="10000"<%}%> name="price" id="price" oninput="price_output.value = '$'+price.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')" onchange="this.form.submit()">
+								</div>
+								<div class="col-3 text-end">
+									<output id="price_output"><% if(request['price']) {%>$<%= request['price'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %><%} else {%>$10,000<%}%></output>
+								</div>
+							</div>
 
 						</div>
 					</form>
@@ -93,13 +101,13 @@
 										</div>
 									</a>
 									<div class="card-body">
-										<h6 class="card-title"><%= products[i].title %></h6>
+										<h6 class="card-title"><%- products[i].title.replace('[','<span class="badge bg-secondary">').replace(']','</span>') %></h6>
 										<div class="card-text mb-2 text-muted"><%= products[i].brand %></div>
 									</div>
 									<div class="card-body">
 										<div class="row card-text small text-muted">
 											<div class="col">ID# <%= products[i].itemid %></div>
-											<div class="col-auto">$<%= products[i].sale_price.toFixed(2) %></div>
+											<div class="col-auto">$<%= products[i].sale_price.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></div>
 										</div>
 									</div>
 									<div class="card-footer small text-muted">
