@@ -18,24 +18,28 @@ MongoClient.connect(connectionString, (err, client) => {
   app.use(bodyParser.json())
 
   app.get('/', (req, res) => {
-    // Remove empty values from the query
+
+    // console.log(req.query)
+
+    // Removing empty values from the query
     req.query = Object.fromEntries(Object.entries(req.query).filter(([_, v]) => v != ''));
 
-    stockCollection.find(req.query).toArray()
+    let brands = [],
+      types = [],
+      brandsCounted = {},
+      typesCounted = {}
+
+    stockCollection.find(req.query).sort({ title: 1 }).toArray()
       .then(results => {
 
         // List of brands and count
-        let brands = []
-        let brandsCounted = {}        
         results.forEach(result => brands.push(result.brand))
         brands.sort().forEach(x => { brandsCounted[x] = (brandsCounted[x] || 0) + 1 })
 
         // List of product types and count
-        let types = []
-        let typesCounted = {}        
         results.forEach(result => types.push(result.product_type))
         types.sort().forEach(x => { typesCounted[x] = (typesCounted[x] || 0) + 1 })
-
+  
         res.render('index.ejs', { 
           request: req.query,
           count: results.length,
@@ -43,18 +47,20 @@ MongoClient.connect(connectionString, (err, client) => {
           types: typesCounted,
           products: results
         })
+
       })
       .catch(error => console.error(error))
+
+
   })
 
-  // Adding documents manually. Remove this.
-  app.post('/products', (req, res) => {
-    stockCollection.insertOne(req.body)
-      .then(result => {
-        res.redirect('/')
-      })
-      .catch(error => console.error(error))
-  })
+  // app.post('/products', (req, res) => {
+  //   stockCollection.insertOne(req.body)
+  //     .then(result => {
+  //       res.redirect('/')
+  //     })
+  //     .catch(error => console.error(error))
+  // })
 
   // app.put('/products', (req, res) => {
   //   stockCollection.findOneAndUpdate(
@@ -75,20 +81,19 @@ MongoClient.connect(connectionString, (err, client) => {
   //   .catch(error => console.error(error))
   // })
 
-  // Removing documents manually. Remove this.
-  app.delete('/products', (req, res) => {
-    stockCollection.deleteOne(
-      // { name: req.body.name }
-      {}
-    )
-    .then(result => {
-      if (result.deletedCount === 0) {
-        return res.json('No quote to delete')
-      }
-      res.json(`Deleted Darth Vadar's quote`)
-    })
-    .catch(error => console.error(error))
-  })
+  // app.delete('/products', (req, res) => {
+  //   stockCollection.deleteOne(
+  //     // { name: req.body.name }
+  //     {}
+  //   )
+  //   .then(result => {
+  //     if (result.deletedCount === 0) {
+  //       return res.json('No quote to delete')
+  //     }
+  //     res.json(`Deleted Darth Vadar's quote`)
+  //   })
+  //   .catch(error => console.error(error))
+  // })
 
   const port = process.env.PORT || 3000
   app.listen(port, () => {

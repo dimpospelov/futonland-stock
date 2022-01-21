@@ -1,63 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Star Wars Quote App</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Alegreya|Source+Sans+Pro&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/styles.css">
-  </head>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Futonland Stock</title>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<link href="/styles.css" rel="stylesheet">
+	</head>
 
-  <body>
-    <h1>Futonland Stock</h1>
+	<body>
 
-    <form action="/products" method="POST">
-      <input type="text" placeholder="brand" name="brand" />
-      <input type="text" placeholder="product_type" name="product_type" />
-      <button type="submit">Submit</button>
-    </form>
+		<div class="container my-4">
+			<div class="row">
+				<div class="col-3">
+					<form action="/" method="GET" id="search">
+						<div class="mb-3">
 
-    <h2> Products </h2>
+							<h4>Product Type</h4>
+							<% for (const type in types) {%>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="product_type" value="<%= type %>" id="<%= type %>" <% if (request['product_type'] == type) {%> checked <% } %> onchange="this.form.submit()">
+								<label class="form-check-label" for="<%= type %>">
+									<%= type %>
+									<span class="text-muted small">(<%= types[type] %>)</span>
+								</label>
+							</div>
+							<% } %>
 
-    
+							<!-- <label for="product_type" class="form-label">Product Type</label>
+							<select class="form-select" name="product_type" id="product_type">
+									<option value="">All Product Types</option>
+									<% for (const type in types) {%>
+											<option value="<%= type %>" <% if (request['product_type'] == type) {%> selected <% } %>><%= type %> (<%= types[type] %>)</option>
+									<% } %>
+							</select> -->
 
-    <form action="/" method="GET">
-        <select name="brand" id="brand">
-            <option value="">All Brands</option>
-            <% for (const brand in brands) {%>
-                <option value="<%= brand %>" <% if (request['brand'] == brand) {%> selected <% } %>><%= brand %> (<%= brands[brand] %>)</option>
-            <% } %>
-        </select>
-        <select name="product_type" id="product_type">
-            <option value="">All Product Types</option>
-            <% for (const type in types) {%>
-                <option value="<%= type %>" <% if (request['product_type'] == type) {%> selected <% } %>><%= type %> (<%= types[type] %>)</option>
-            <% } %>
-        </select>
-        <button type="submit">Search</button>
-    </form>
+						</div>
+						<div class="mb-3">
 
-    <p>Result Count: <%= count %></p>
+							<h4>Manufacturer</h4>
+							<% for (const brand in brands) {%>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="brand" value="<%= brand %>" id="<%= brand %>" <% if (request['brand'] == brand) {%> checked <% } %> onchange="this.form.submit()">
+								<label class="form-check-label" for="<%= brand %>">
+									<%= brand %>
+									<span class="text-muted small">(<%= brands[brand] %>)</span>
+								</label>
+							</div>
+							<% } %>
 
-    <ul class="products">
-      <% for (var i = 0; i < products.length; i++) {%>
-        <li class="quote">
-          <span><%= products[i].brand %></span>:
-          <span><%= products[i].product_type %></span>
-        </li>
-      <% } %>
-    </ul>
+							<!-- <label for="brand" class="form-label">Manufacturer</label>
+							<select class="form-select" name="brand" id="brand">
+									<option value="">All Brands</option>
+									<% for (const brand in brands) {%>
+											<option value="<%= brand %>" <% if (request['brand'] == brand) {%> selected <% } %>><%= brand %> (<%= brands[brand] %>)</option>
+									<% } %>
+							</select> -->
 
-    <div>
-        <h2>Darth Vadar invades!</h2>
-        <p>
-          Replace first Yoda's quote with a quote written by Darth Vadar
-        </p>
-        <button id="update-button">Replace Yoda's quote</button>
-        <button id="delete-button">Delete Darth Vadar's quote</button>
-        <div id="message"></div>
-    </div>
-    
-    <script type="text/javascript" src="/script.js"></script>
-  </body>
+						</div>
+					</form>
+				</div>
+				<div class="col-9">
+
+					<div class="row">
+						<div class="col">
+							Results found: <%= count %> <% if (count > 100) {%> (Showing first 100) <%}%>
+							<!-- <select class="form-select" name="change_page_select" id="change_page_select" form="search">
+								<option value="24">24 per page</option>
+								<option value="48">48 per page</option>
+								<option value="24">96 per page</option>
+								<option value="">View All</option>
+							</select> -->
+						</div>
+					</div>
+
+					<div class="row">
+						<% for (var i = 0; i < Math.min(products.length, 100); i++) {%>
+							<div class="col-3">
+								<div class="card mb-3">
+									<a href="<%= products[i].link %>" target="_blank">
+										<div class="ratio ratio-1x1">
+											<div class="square-image">
+												<img src="<%= products[i].image_link.replace('large', 'main') %>" alt="<%= products[i].title %>">
+											</div>
+										</div>
+									</a>
+									<div class="card-body">
+										<h6 class="card-title"><%= products[i].title %></h6>
+										<div class="card-text mb-2 text-muted"><%= products[i].brand %></div>
+									</div>
+									<div class="card-body">
+										<div class="row card-text small text-muted">
+											<div class="col">ID# <%= products[i].itemid %></div>
+											<div class="col-auto">$<%= products[i].sale_price %></div>
+										</div>
+									</div>
+									<div class="card-footer small text-muted">
+										<div class="row">
+											<div class="col">Greenpoint</div>
+											<div class="col-1"><%= products[i]['FLBKLYN-1'] ? products[i]['FLBKLYN-1'] : '-' %></div>
+											<div class="col-1"><%= products[i]['FLBKLYN-2'] ? products[i]['FLBKLYN-2'] : '-' %></div>
+										</div>
+										<div class="row">
+											<div class="col">Upper West Side</div>
+											<div class="col-1"><%= products[i]['FLNYC-1'] ? products[i]['FLNYC-1'] : '-' %></div>
+											<div class="col-1"><%= products[i]['FLNYC-2'] ? products[i]['FLNYC-2'] : '-' %></div>
+										</div>
+										<div class="row">
+											<div class="col">Newark</div>
+											<div class="col-1"><%= products[i]['FLNWRK-1'] ? products[i]['FLNWRK-1'] : '-' %></div>
+											<div class="col-1"><%= products[i]['FLNWRK-2'] ? products[i]['FLNWRK-2'] : '-' %></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						<% } %>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="/script.js"></script>
+	</body>
 </html>
