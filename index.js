@@ -36,27 +36,33 @@ MongoClient.connect(connectionString, (err, client) => {
 
     // console.log(query)
 
-    let brands = [],
-      types = [],
-      brandsCounted = {},
-      typesCounted = {}
 
     stockCollection.find(query).sort({ [req.query.sort || 'title']: 1 }).toArray()
       .then(results => {
 
-        // List of brands and count
-        results.forEach(result => brands.push(result.brand))
-        brands.sort().forEach(x => { brandsCounted[x] = (brandsCounted[x] || 0) + 1 })
+        let brands = [],
+          types = [],
+          prices = [],
+          brandsCounted = {},
+          typesCounted = {}
 
-        // List of product types and count
-        results.forEach(result => types.push(result.product_type))
+        results.forEach((result) => {
+          brands.push(result.brand)
+          types.push(result.product_type)
+          prices.push(result.sale_price)
+        })
+        brands.sort().forEach(x => { brandsCounted[x] = (brandsCounted[x] || 0) + 1 })
         types.sort().forEach(x => { typesCounted[x] = (typesCounted[x] || 0) + 1 })
+
+        // console.log(Math.min(...prices))
   
         res.render('index.ejs', { 
           request: req.query,
           count: results.length,
           brands: brandsCounted,
           types: typesCounted,
+          priceMin: Math.min(...prices),
+          priceMax: Math.max(...prices),
           products: results
         })
 

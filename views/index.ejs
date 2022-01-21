@@ -63,10 +63,10 @@
 							<h4>Price</h4>
 							<div class="row">
 								<div class="col">
-									<input type="range" class="form-range" min="0" max="10000" step="100" <% if(request['price']) {%>value="<%= request['price'] %>"<%} else {%>value="10000"<%}%> name="price" id="price" oninput="price_output.value = '$'+price.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')" onchange="this.form.submit()">
+									<input type="range" class="form-range" min="<% if(priceMin) {%><%= Math.ceil(priceMin/100)*100 %><%}%>" max="5000" step="100" <% if(request['price']) {%>value="<%= request['price'] %>"<%} else {%>value="5000"<%}%> name="price" id="price" oninput="price_output.value = '$'+price.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')" onchange="this.form.submit()">
 								</div>
 								<div class="col-3 text-end">
-									<output id="price_output"><% if(request['price']) {%>$<%= request['price'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %><%} else {%>$10,000<%}%></output>
+									<output id="price_output"><% if(request['price']) {%>$<%= request['price'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %><%} else {%>$5,000<%}%></output>
 								</div>
 							</div>
 
@@ -77,7 +77,7 @@
 
 					<div class="row mb-4">
 						<div class="col" style="line-height: 38px;">
-							Results found: <%= count %> <% if (count > 100) {%> <span class="text-muted">(Showing first 100)</span> <%}%>
+							Results found: <%= count %> <% if (count > 48) {%> <span class="text-muted">(Showing first 48)</span> <%}%>
 						</div>
 						<div class="col-auto">
 							<select class="form-select" name="sort" id="sort" form="search" onchange="this.form.submit()">
@@ -90,7 +90,7 @@
 					</div>
 
 					<div class="row">
-						<% for (var i = 0; i < Math.min(products.length, 100); i++) {%>
+						<% for (var i = 0; i < Math.min(products.length, 48); i++) {%>
 							<div class="col-3">
 								<div class="card mb-3">
 									<a href="<%= products[i].link %>" target="_blank">
