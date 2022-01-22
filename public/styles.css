@@ -1,3 +1,12 @@
+#logo {
+	display: inline-block;
+}
+
+#logo img {
+    width: 140px;
+    height: 42px;
+}
+
 .square-image {
     text-align: center;
 }
@@ -16,6 +25,7 @@
     margin-left: -100%;
     margin-right: -100%;
     text-align: center;
+	cursor: pointer;
 }
 
 #price .rangepicker-selection {

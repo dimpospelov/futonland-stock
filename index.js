@@ -22,7 +22,7 @@ MongoClient.connect(connectionString, (err, client) => {
     // console.log(req.query)
 
     // Removing empty values from the query
-    // req.query = Object.fromEntries(Object.entries(req.query).filter(([_, v]) => v != ''));
+    req.query = Object.fromEntries(Object.entries(req.query).filter(([_, v]) => v != ''));
 
     let query = {}
     if (req.query.product_type) query.product_type = req.query.product_type
@@ -32,9 +32,10 @@ MongoClient.connect(connectionString, (err, client) => {
       if (req.query.keyword) query.$and.push( { $or: [ { title: { $regex: req.query.keyword, $options: "i" } }, { product_type: { $regex: req.query.keyword, $options: "i" } }, { brand: { $regex: req.query.keyword, $options: "i" } }, { itemid: { $regex: req.query.keyword, $options: "i" } } ] } )
       if (req.query.location) query.$and.push( { $or: [ { [req.query.location+'-1']: { $exists: true } }, { [req.query.location+'-2']: { $exists: true } } ] } )
     }
+    if (req.query.price == '5000') delete req.query.price
     if (req.query.price) query.sale_price = { $gt: 0, $lt: parseInt(req.query.price) }
 
-    // console.log(query)
+    // console.log(query.sale_price)
 
 
     stockCollection.find(query).sort({ [req.query.sort || 'title']: 1 }).toArray()
@@ -53,8 +54,6 @@ MongoClient.connect(connectionString, (err, client) => {
         })
         brands.sort().forEach(x => { brandsCounted[x] = (brandsCounted[x] || 0) + 1 })
         types.sort().forEach(x => { typesCounted[x] = (typesCounted[x] || 0) + 1 })
-
-        // console.log(Math.min(...prices))
   
         res.render('index.ejs', { 
           request: req.query,
@@ -62,8 +61,8 @@ MongoClient.connect(connectionString, (err, client) => {
           brands: brandsCounted,
           types: typesCounted,
           priceMin: Math.min(...prices),
-          priceMax: Math.max(...prices),
-          products: results
+          products: results,
+          timestamp: results[0]._id.getTimestamp()
         })
 
       })
@@ -113,7 +112,7 @@ MongoClient.connect(connectionString, (err, client) => {
   //   .catch(error => console.error(error))
   // })
 
-  const port = process.env.PORT || 3000
+  const port = process.env.PORT || 3001
   app.listen(port, () => {
     console.log(`Server started on port ${port}`)
   })
