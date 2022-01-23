@@ -54,7 +54,7 @@ MongoClient.connect(connectionString, (err, client) => {
         })
         brands.sort().forEach(x => { brandsCounted[x] = (brandsCounted[x] || 0) + 1 })
         types.sort().forEach(x => { typesCounted[x] = (typesCounted[x] || 0) + 1 })
-  
+
         res.render('index.ejs', { 
           request: req.query,
           count: results.length,
@@ -62,7 +62,7 @@ MongoClient.connect(connectionString, (err, client) => {
           types: typesCounted,
           priceMin: Math.min(...prices),
           products: results,
-          timestamp: results[0]._id.getTimestamp()
+          timestamp: results.length ? results[0]._id.getTimestamp() : ''
         })
 
       })
