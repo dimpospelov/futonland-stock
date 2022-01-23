@@ -75,10 +75,10 @@
 								<h3 class="fs-5 my-3">Price</h3>
 								<div class="row">
 									<div class="col">
-										<input type="range" class="form-range" min="<% if(priceMin) {%><%= Math.ceil(priceMin/100)*100 %><%}%>" max="5000" step="100" <% if(request['price']) {%>value="<%= request['price'] %>"<%} else {%>value="5000"<%}%> name="price" id="price" oninput="price_output.value = (price.value.toString() != '5000') ? '$'+price.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '$5,000+'" onchange="this.form.submit()">
+										<input type="range" class="form-range" min="<% if(priceMin) {%><%= Math.ceil(priceMin/100)*100 %><%}%>" max="2500" step="100" <% if(request['price']) {%>value="<%= request['price'] %>"<%} else {%>value="2500"<%}%> name="price" id="price" oninput="price_output.value = (price.value.toString() != '2500') ? '$'+price.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '$2,500+'" onchange="this.form.submit()">
 									</div>
 									<div class="col-auto text-end" style="width: 85px;">
-										<output id="price_output"><% if(request['price']) {%>$<%= request['price'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %><%} else {%>$5,000+<%}%></output>
+										<output id="price_output"><% if(request['price']) {%>$<%= request['price'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %><%} else {%>$2,500+<%}%></output>
 									</div>
 								</div>
 

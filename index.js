@@ -32,7 +32,7 @@ MongoClient.connect(connectionString, (err, client) => {
       if (req.query.keyword) query.$and.push( { $or: [ { title: { $regex: req.query.keyword, $options: "i" } }, { product_type: { $regex: req.query.keyword, $options: "i" } }, { brand: { $regex: req.query.keyword, $options: "i" } }, { itemid: { $regex: req.query.keyword, $options: "i" } } ] } )
       if (req.query.location) query.$and.push( { $or: [ { [req.query.location+'-1']: { $exists: true } }, { [req.query.location+'-2']: { $exists: true } } ] } )
     }
-    if (req.query.price == '5000') delete req.query.price
+    if (req.query.price == '2500') delete req.query.price
     if (req.query.price) query.sale_price = { $gt: 0, $lt: parseInt(req.query.price) }
 
     // console.log(query.sale_price)
