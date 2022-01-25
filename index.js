@@ -17,6 +17,18 @@ MongoClient.connect(connectionString, (err, client) => {
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(bodyParser.json())
 
+  // Authentication middleware
+  app.use((req, res, next) => {
+    const auth = {login: 'futonland', password: 'calyer'}
+    const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
+    const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':')
+    if (login && password && login === auth.login && password === auth.password) {
+      return next()
+    }
+    res.set('WWW-Authenticate', 'Basic realm="401"') // change this
+    res.status(401).send('Authentication required.') // custom message
+  })
+
   app.get('/', (req, res) => {
 
     // Removing empty values from the query
