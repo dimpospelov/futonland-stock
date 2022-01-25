@@ -19,8 +19,6 @@ MongoClient.connect(connectionString, (err, client) => {
 
   app.get('/', (req, res) => {
 
-    // console.log(req.query)
-
     // Removing empty values from the query
     req.query = Object.fromEntries(Object.entries(req.query).filter(([_, v]) => v != ''));
 
@@ -35,12 +33,23 @@ MongoClient.connect(connectionString, (err, client) => {
     if (req.query.price == '2500') delete req.query.price
     if (req.query.price) query.sale_price = { $gt: 0, $lt: parseInt(req.query.price) }
 
-    // console.log(query.sale_price)
-
+    // console.log(query)
 
     stockCollection.find(query).sort({ [req.query.sort || 'title']: 1 }).toArray()
       .then(results => {
 
+        // Exclusions
+        for (var i=0; i<results.length; i++) {
+          if (results[i].product_type == "Fabrics" ||
+            results[i].product_type == "Futon Covers" ||
+            results[i].product_type == "Futon Sets" ||
+            results[i].product_type == "Pillow Shams") {
+            results.splice(i, 1)
+            i--
+          }
+        }
+
+        // Filters info
         let brands = [],
           types = [],
           prices = [],
@@ -55,6 +64,7 @@ MongoClient.connect(connectionString, (err, client) => {
         brands.sort().forEach(x => { brandsCounted[x] = (brandsCounted[x] || 0) + 1 })
         types.sort().forEach(x => { typesCounted[x] = (typesCounted[x] || 0) + 1 })
 
+        // Rendering page
         res.render('index.ejs', { 
           request: req.query,
           count: results.length,
