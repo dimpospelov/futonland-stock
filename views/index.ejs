@@ -39,6 +39,7 @@
 									<option value="FLBKLYN" <% if (request['location'] == "FLBKLYN") {%> selected <%}%> >Greenpoint</option>
 									<option value="FLNYC" <% if (request['location'] == "FLNYC") {%> selected <%}%> >Upper West Side</option>
 									<option value="FLNWRK" <% if (request['location'] == "FLNWRK") {%> selected <%}%> >Newark</option>
+									<option value="FLMETROCA" <% if (request['location'] == "FLMETROCA") {%> selected <%}%> >Metro (California)</option>
 								</select>
 
 							</div>
@@ -153,6 +154,15 @@
 												</div>
 													<div class="col-2">
 														<div class="count" data-bs-toggle="tooltip" data-bs-placement="top" title="Warehouse"><%= products[i]['FLNWRK-2'] ? products[i]['FLNWRK-2'] : '\u2022' %></div>
+													</div>
+											</div>
+											<div class="row">
+												<div class="col">Metro (California)</div>
+												<div class="col-2">
+													<div class="count" data-bs-toggle="tooltip" data-bs-placement="top" title="Showroom"><%= '\u2022' %></div>
+												</div>
+													<div class="col-2">
+														<div class="count" data-bs-toggle="tooltip" data-bs-placement="top" title="Warehouse"><%= products[i]['FLMETROCA-1'] ? products[i]['FLMETROCA-1'] : '\u2022' %></div>
 													</div>
 											</div>
 										</div>
